@@ -1,14 +1,33 @@
 // Configuration for your app
-// https://quasar.dev/quasar-cli/quasar-conf-js
+
+require('dotenv').config()
 
 module.exports = function (ctx) {
+  const ENVIRONMENT_INDICATOR_MAP = {
+    PROD: ' ',
+    QA: ' - QA',
+  }
+
+  const API_BASE_URL = JSON.stringify(process.env.LOCAL_BACKEND_ENDPOINT)
+
+  if (API_BASE_URL === null) {
+    throw new Error('Check if LOCAL_BACKEND_ENDPOINT is set in .env')
+  }
+
+  console.log('=========================================')
+  console.log('Build Info')
+  console.log(`Stage: ${process.env.stage}`)
+  console.log(`App version: ${process.env.APP_VERSION}`)
+  console.log(`Api base url: ${API_BASE_URL}`)
+  console.log('=========================================')
+
   return {
-    // app boot file (/src/boot)
-    // --> boot files are part of "main.js"
-    // https://quasar.dev/quasar-cli/cli-documentation/boot-files
+    // app plugins (/src/boot)
     boot: [
       'i18n',
-      'axios'
+      'axios',
+      'vuelidate',
+      'view-model'
     ],
     css: [
       'app.sass'
@@ -19,8 +38,14 @@ module.exports = function (ctx) {
     ],
     supportIE: false,
     build: {
+      env: {
+        API_BASE_URL,
+        APP_VERSION: JSON.stringify(process.env.APP_VERSION),
+        ENVIRONMENT_INDICATOR: JSON.stringify(ENVIRONMENT_INDICATOR_MAP[process.env.stage] || ' - Dev'),
+        STAGE: JSON.stringify(process.env.stage)
+      },
       scopeHoisting: true,
-      // vueRouterMode: 'history', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // showProgress: true,
       // gzip: false,
       // analyze: false,
@@ -63,12 +88,16 @@ module.exports = function (ctx) {
         'QList',
         'QItem',
         'QItemSection',
-        'QItemLabel'
+        'QItemLabel',
+        'QInput'
       ],
       directives: [
         'Ripple'
       ],
-      plugins: []
+      plugins: [
+        'Notify',
+        'Loading'
+      ]
     },
     animations: []
   }
