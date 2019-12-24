@@ -32,3 +32,9 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+# index.html
+src/index.template.html
+
+# Env config
+.env
