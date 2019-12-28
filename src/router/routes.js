@@ -7,7 +7,19 @@ const routes = [
       {
         path: '',
         name: 'app.login',
-        component: () => import('pages/TheLogin/index.vue')
+        component: () => import('pages/TheLogin')
+      }
+    ]
+  },
+  {
+    path: '/',
+    redirect: '/home',
+    component: () => import('layouts/RequiresAuthLayout'),
+    children: [
+      {
+        path: '/home',
+        name: 'app.home',
+        component: () => import('pages/TheHome/index.vue')
       }
     ]
   }

@@ -5,7 +5,7 @@ require('dotenv').config()
 module.exports = function (ctx) {
   const ENVIRONMENT_INDICATOR_MAP = {
     PROD: ' ',
-    QA: ' - QA',
+    QA: ' - QA'
   }
 
   const API_BASE_URL = JSON.stringify(process.env.LOCAL_BACKEND_ENDPOINT)
@@ -89,7 +89,11 @@ module.exports = function (ctx) {
         'QItem',
         'QItemSection',
         'QItemLabel',
-        'QInput'
+        'QInput',
+        'QParallax',
+        'QStepper',
+        'QStep',
+        'QStepperNavigation'
       ],
       directives: [
         'Ripple'
