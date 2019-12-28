@@ -8,11 +8,30 @@ import {
   AUTHENTICATE_PWD_URL
 } from './constants'
 
+const users = [
+  { email: 'zeller@admin.com', password: 'zeller@admin', token: 'Barear your#JWT#admin#user#Token', type: 'ADMIN' },
+  { email: 'zeller@general.com', password: 'zeller@general', token: 'Barear your#JWT#general#user#Token', type: 'GENERAL' }
+]
+
 class AuthService {
   static loggedUserModel = null
 
   static async login (email, password) {
-    const user = await http.post(LOGIN_URL, { email, password }).then(res => res.data)
+    // Remove this mock users and add the 'http.post' code to invoke
+    // your authentication API
+
+    // -- UNCOMMENT -- the bellow line to work in the real world
+    // const user = await http.post(LOGIN_URL, { email, password }).then(res => res.data)
+
+    // -- REMOVE -- the bellow lines bellow to work in the real world
+    // We are not handling wron users and passwords :)
+    console.log(`It was suppose to call the following endpoint: ${LOGIN_URL}`)
+    const user = await new Promise((resolve) => {
+      // simulating a delay of 3 seconds
+      setTimeout(() => {
+        resolve(users.find(u => u.email === email && u.password === password))
+      }, 3000)
+    })
     http.setAuthorizationToken(user.token)
 
     const appUserLogin = {
@@ -28,7 +47,8 @@ class AuthService {
   }
 
   static async logout () {
-    await http.post(LOGOUT_URL)
+    // await http.post(LOGOUT_URL) -- UNCOMMENT -- this line to work in the real world
+    console.log(`It was suppose to call the following endpoint: ${WHO_AM_I_URL}`)
     localStorage.removeItem(APP_USER_KEY_LOCAL_STORAGE)
     this.loggedUserModel = null
   }
@@ -42,7 +62,15 @@ class AuthService {
     } else {
       if (!this.loggedUserModel) {
         http.setAuthorizationToken(appUserLogin.token)
-        const whoAmIres = await http.get(WHO_AM_I_URL).then(res => res.data)
+        // -- UNCOMMENT -- the line bellow to work in real the world
+        // const whoAmIres = await http.get(WHO_AM_I_URL).then(res => res.data)
+        console.log(`It was suppose to call the following endpoint: ${LOGOUT_URL}`)
+        const whoAmIres = { ...await new Promise((resolve) => {
+          // simulating a delay of 1 seconds
+          setTimeout(() => {
+            resolve({ user: users.find(u => u.token === appUserLogin.token) })
+          }, 1000)
+        }) }
         this.loggedUserModel = new UserModel(whoAmIres)
       }
 
